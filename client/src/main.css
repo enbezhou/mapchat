@@ -1,0 +1,16 @@
+html {
+    box-sizing: border-box;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Helvetica Neue', Helvetica,Arial,sans-serif;
+}
+
+h1, h2, h3, h5, p, ul {
+    margin: 30px;
+    padding: 30px;
+}
+
