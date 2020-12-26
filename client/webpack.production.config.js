@@ -1,4 +1,6 @@
 // https://segmentfault.com/a/1190000006178770
+// https://segmentfault.com/a/1190000019126657
+
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
