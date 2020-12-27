@@ -4,7 +4,7 @@ import {
     CHANGE_TODO_TO_DOING,
     CHANGE_DOING_TO_DONE,
     CHANGE_DOING_TO_TODO,
-    CAHNGE_DONE_TO_DOING,
+    CHANGE_DONE_TO_DOING,
     SEARCH,
 } from '../actions';
 
@@ -84,7 +84,7 @@ const todolist = (state = todos, action) => {
         /*
          * 将done转为doing状态
          */
-        case CAHNGE_DONE_TO_DOING:
+        case CHANGE_DONE_TO_DOING:
             localStorage.setItem('todos', JSON.stringify([
                 ...state.slice(0, action.index),
                 {

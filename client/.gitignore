@@ -2,3 +2,5 @@ node_modules
 build
 dist
 .history
+package-lock.json
+dll

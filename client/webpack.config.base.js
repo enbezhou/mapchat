@@ -43,7 +43,8 @@ module.exports = {
     module: {
         rules: [{
                 test: /\.css$/,
-                use: [{
+                use: [
+                    {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
                             // only enable hot in development
@@ -60,7 +61,8 @@ module.exports = {
             },
             {
                 test: /\.less$/,
-                use: [{
+                use: [
+                    {
                         loader: MiniCssExtractPlugin.loader,
                         options: {
 
