@@ -7,6 +7,8 @@ import AllMemosRoute from './routes/AllMemosRoute';
 import TodoRoute from './routes/TodoRoute';
 import DoingRoute from './routes/DoingRoute';
 import DoneRoute from './routes/DoneRoute';
+import TestMessage from './routes/TestMessage';
+
 import configureStore from './stores';
 import './main.less';
 
@@ -14,6 +16,7 @@ const store = configureStore();
 ReactDOM.render(
     <Provider store={store}>
         <Router history={hashHistory}>
+            <Route path="/test" component={TestMessage} />
             <Route
                 path="/"
                 component={App}

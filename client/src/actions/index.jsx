@@ -10,6 +10,10 @@ export const CHANGE_DONE_TO_DOING = 'Change_Done_To_Doing';
 export const CHANGE_DOING_TO_TODO = 'Change_Doing_To_Todo';
 export const SEARCH = 'Search';
 export const DELETE_TODO = 'Delete_Todo';
+
+export const GET_MESSAGE_LIST = 'Get_Message_List';
+export const Add_MESSAGE = 'Add_Message';
+
 /*
  * action 创建函数
  * @method  addTodo添加新事项
