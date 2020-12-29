@@ -1,6 +1,6 @@
 import {
     GET_MESSAGE_LIST,
-    Add_MESSAGE,
+    ADD_MESSAGE,
 } from '../actions';
 
 let testMsgs;
@@ -17,10 +17,10 @@ const messageList = (state = testMsgs, action) => {
     switch (action.type) {
         case  GET_MESSAGE_LIST:
             return state;
-        case Add_MESSAGE:
+        case ADD_MESSAGE:
             return [
                 ...state, {
-                    message: action.text,
+                    message: action.message,
                 }
             ];
         default:

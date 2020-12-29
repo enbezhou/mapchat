@@ -12,7 +12,7 @@ export const SEARCH = 'Search';
 export const DELETE_TODO = 'Delete_Todo';
 
 export const GET_MESSAGE_LIST = 'Get_Message_List';
-export const Add_MESSAGE = 'Add_Message';
+export const ADD_MESSAGE = 'Add_Message';
 
 /*
  * action 创建函数
@@ -100,5 +100,12 @@ export function deleteTodo(index) {
     return {
         type: DELETE_TODO,
         index,
+    };
+}
+
+export function  addTestMessage(message) {
+    return {
+        type: ADD_MESSAGE,
+        message,
     };
 }
