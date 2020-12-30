@@ -1,48 +1,48 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <meta charset="utf-8">
+    <meta name="description" content="WebRTC code samples">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="Client-side WebRTC code samples">
+    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+    <base target="_blank">
+    <title>mapchat.cn by Enbe Zhou</title>
 
-    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="stylesheet" href="css/video/main.css"/>
+
+
   </head>
+
   <body>
-    <h1>Hellox <%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <div id="container">
+      <video id="localVideo" playsinline autoplay muted></video>
+      <video id="remoteVideo" playsinline autoplay></video>
 
+      <div class="box">
+        <button id="startButton">Start</button>
+        <button id="callButton">Call</button>
+        <button id="hangupButton">Hang Up</button>
+      </div>
 
-  <script>
+      <div class="box">
+        <span>SDP Semantics:</span>
+        <select id="sdpSemantics">
+          <option selected value="">Default</option>
+          <option value="unified-plan">Unified Plan</option>
+          <option value="plan-b">Plan B</option>
+        </select>
+      </div>
+    </div>
 
-    window.onload = function () {
+  <script src="js/webrtc/adapter-latest.js"></script>
+<!--    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>-->
 
-      var socket = io.connect('/');
+    <script src="js/video/main.js" async></script>
 
-      //监听与服务器端的连接成功事件
-
-      socket.on('connect', function () {
-
-        console.log('客服端连接成功');
-
-      });
-
-      // 客服端收到服务器发过来的消息后
-
-      socket.on('message', function (message) {
-
-        console.log('客服端接收消息 ' + message);
-
-      });
-
-      //监听与服务器端断开连接事件
-
-      socket.on('disconnect', function () {
-
-        console.log('断开连接');
-
-      });
-
-    };
-
-  </script>
   </body>
 </html>

@@ -7,7 +7,6 @@ import { addTestMessage } from '../actions'
 import { io } from "socket.io-client";
 
 var socket = io("http://localhost:8000").connect();
-console.log('socketId:————————————' + socket.id);
 /*
  * @class TestMessage `新建事项`组件
  */
@@ -21,6 +20,7 @@ class TestMessage extends Component {
     }
 
     componentDidMount() {
+        console.log('socketId:————————————' + socket.id);
         socket.on('sendToClientmessage', this.props.updateServerMessageToState);
     }
 
@@ -82,6 +82,17 @@ class TestMessage extends Component {
                 <button onClick={this.insertMessage}>insert</button>
                 <button onClick={this.addMessage}>add</button>
                 <button onClick={this.updateMessage}>update</button>
+                <div id="videoContainer">
+                    <video id="localVideo" playsInline autoPlay muted></video>
+                    <video id="remoteVideo" playsInline autoPlay></video>
+                    <div>
+                        <button id="startButton">Start</button>
+                        <button id="callButton">Call</button>
+                        <button id="upgradeButton">Turn on video</button>
+                        <button id="hangupButton">Hang Up</button>
+                    </div>
+                </div>
+
             </div>
         );
     }
