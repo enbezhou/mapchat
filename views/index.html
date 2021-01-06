@@ -1,19 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Realtime communication with WebRTC</title>
+    <title>connect world</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/css/main.css" />
   </head>
 
   <body>
-    <h1>视频聊天</h1>
+    <h1><img src="favicon.ico" style="width: 25px;"/>      Connect World</h1>
     <div id="videos">
       <video id="localVideo" autoplay muted playsinline></video>
       <video id="remoteVideo" autoplay playsinline></video>
     </div>
 
     <!-- This file is automatically added/served when running "node index.js". -->
-    <script src="js/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="js/webrtc/adapter-latest.js"></script>
     <script src="js/main.js"></script>
 
