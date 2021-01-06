@@ -21,12 +21,14 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-let io = require('socket.io')(server, {
-  cors: {
-    origin: "http://localhost:8001",
-    methods: ["GET", "POST"]
-  }
-})
+// let io = require('socket.io')(server, {
+//   cors: {
+//     origin: "http://localhost:8000",
+//     methods: ["GET", "POST"]
+//   }
+// })
+
+let io = require('socket.io')(server)
 bindSocketIoEvent(io);
 /**
  * Listen on provided port, on all network interfaces.

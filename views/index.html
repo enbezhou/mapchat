@@ -1,48 +1,22 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <meta name="description" content="WebRTC code samples">
-    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
-    <meta itemprop="description" content="Client-side WebRTC code samples">
-    <meta itemprop="image" content="../../../images/webrtc-icon-192x192.png">
-    <meta itemprop="name" content="WebRTC code samples">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta id="theme-color" name="theme-color" content="#ffffff">
-    <base target="_blank">
-    <title>mapchat.cn by Enbe Zhou</title>
-
-    <link rel="stylesheet" href="css/main.css"/>
-    <link rel="stylesheet" href="css/video/main.css"/>
-
-
+    <title>Realtime communication with WebRTC</title>
+    <link rel="stylesheet" href="/css/main.css" />
   </head>
 
   <body>
-    <div id="container">
-      <video id="localVideo" playsinline autoplay muted></video>
-      <video id="remoteVideo" playsinline autoplay></video>
-
-      <div class="box">
-        <button id="startButton">Start</button>
-        <button id="callButton">Call</button>
-        <button id="hangupButton">Hang Up</button>
-      </div>
-
-      <div class="box">
-        <span>SDP Semantics:</span>
-        <select id="sdpSemantics">
-          <option selected value="">Default</option>
-          <option value="unified-plan">Unified Plan</option>
-          <option value="plan-b">Plan B</option>
-        </select>
-      </div>
+    <h1>视频聊天</h1>
+    <div id="videos">
+      <video id="localVideo" autoplay muted playsinline></video>
+      <video id="remoteVideo" autoplay playsinline></video>
     </div>
 
-  <script src="js/webrtc/adapter-latest.js"></script>
-<!--    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>-->
-
-    <script src="js/video/main.js" async></script>
+    <!-- This file is automatically added/served when running "node index.js". -->
+    <script src="js/socket.io/socket.io.js"></script>
+    <script src="js/webrtc/adapter-latest.js"></script>
+    <script src="js/main.js"></script>
 
   </body>
+
 </html>
