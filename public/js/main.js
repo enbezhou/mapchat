@@ -33,14 +33,32 @@ var sdpConstraints = {
 
 var room = 'foo';
 // Could prompt for room name:
-room = prompt('请输入房间号:');
+document.getElementById('videos').style.visibility="hidden";
+document.getElementsByClassName("callEnter")[0].addEventListener('click', start);
+
+function start() {
+    room = prompt('请输入房间号:');
+    if (room !== '') {
+        socket.emit('create or join', room);
+        console.log('Attempted to create or  join room', room);
+    }
+    try {
+        navigator.mediaDevices.getUserMedia({
+            audio: true,
+            video: true
+        })
+            .then(gotStream)
+            .catch(function(e) {
+                alert('getUserMedia() error: ' + e.name);
+            });
+    } catch (e) {
+        alert(`getUserMedia() error: ${e.name}`);
+    }
+}
+
+
 
 var socket = io.connect();
-
-if (room !== '') {
-    socket.emit('create or join', room);
-    console.log('Attempted to create or  join room', room);
-}
 
 socket.on('created', function(room) {
     console.log('Created room ' + room);
@@ -102,14 +120,7 @@ socket.on('message', function(message) {
 var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 
-navigator.mediaDevices.getUserMedia({
-    audio: true,
-    video: true
-})
-    .then(gotStream)
-    .catch(function(e) {
-        alert('getUserMedia() error: ' + e.name);
-    });
+
 
 function gotStream(stream) {
     console.log('Adding local stream.');
@@ -119,6 +130,8 @@ function gotStream(stream) {
     if (isInitiator) {
         maybeStart();
     }
+    document.getElementById('initImage').style.visibility="hidden";
+    document.getElementById('videos').style.visibility="visible";
 }
 
 var constraints = {
