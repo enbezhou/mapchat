@@ -119,6 +119,8 @@ socket.on('message', function(message) {
 
 var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
+var miniVideo = document.querySelector('#miniVideo');
+var videoDiv = document.querySelector('#videos');
 
 
 
@@ -132,6 +134,7 @@ function gotStream(stream) {
     }
     document.getElementById('initImage').style.visibility="hidden";
     document.getElementById('videos').style.visibility="visible";
+    localVideo.classList.add("active");
 }
 
 var constraints = {
@@ -254,6 +257,15 @@ function handleRemoteStreamAdded(event) {
     console.log('Remote stream added.');
     remoteStream = event.stream;
     remoteVideo.srcObject = remoteStream;
+    miniVideo.srcObject = localVideo.srcObject;
+
+    // Transition opacity from 0 to 1 for the remote and mini videos.
+    remoteVideo.classList.add("active");
+    miniVideo.classList.add("active");
+    // Transition opacity from 1 to 0 for the local video.
+    localVideo.classList.remove("active");
+    localVideo.srcObject = null;
+    videoDiv.classList.add("active");
 }
 
 function handleRemoteStreamRemoved(event) {
