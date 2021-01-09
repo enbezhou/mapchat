@@ -7,6 +7,13 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
+var localVideo = document.querySelector('#localVideo');
+var remoteVideo = document.querySelector('#remoteVideo');
+var miniVideo = document.querySelector('#miniVideo');
+var videoDiv = document.querySelector('#videos');
+var initImageDiv = document.querySelector('#initImage');
+
+
 
 var pcConfig = {
     'iceServers': [
@@ -33,7 +40,7 @@ var sdpConstraints = {
 
 var room = 'foo';
 // Could prompt for room name:
-document.getElementById('videos').style.visibility="hidden";
+videoDiv.style.visibility="hidden";
 document.getElementsByClassName("callEnter")[0].addEventListener('click', start);
 
 function start() {
@@ -116,14 +123,6 @@ socket.on('message', function(message) {
 });
 
 ////////////////////////////////////////////////////
-
-var localVideo = document.querySelector('#localVideo');
-var remoteVideo = document.querySelector('#remoteVideo');
-var miniVideo = document.querySelector('#miniVideo');
-var videoDiv = document.querySelector('#videos');
-
-
-
 function gotStream(stream) {
     console.log('Adding local stream.');
     localStream = stream;
@@ -132,8 +131,8 @@ function gotStream(stream) {
     if (isInitiator) {
         maybeStart();
     }
-    document.getElementById('initImage').style.visibility="hidden";
-    document.getElementById('videos').style.visibility="visible";
+    initImageDiv.style.visibility="hidden";
+    videoDiv.style.visibility="visible";
     localVideo.classList.add("active");
 }
 
