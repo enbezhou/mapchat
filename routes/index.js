@@ -6,4 +6,9 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+/* GET home page. */
+router.get('/mt', function(req, res, next) {
+    res.render('maptest', { title: 'Express' });
+});
+
 module.exports = router;
