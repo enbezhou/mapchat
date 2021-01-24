@@ -1,3 +1,5 @@
+var userDB = require('./userDB');
+
 const bindSocketIoEvent = (io) => {
     io.on('connection', function(socket) {
         console.log("test connect");
@@ -16,7 +18,7 @@ const bindSocketIoEvent = (io) => {
 
         socket.on('create or join', function(room) {
             log('Received request to create or join room ' + room);
-
+            log("onlineUserList:" + userDB.userList);
             var clientsInRoom = io.sockets.adapter.rooms.get(room);
             var numClients = clientsInRoom ? clientsInRoom.size : 0;
             log('Room ' + room + ' now has ' + numClients + ' client(s)');

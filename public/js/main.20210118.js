@@ -12,7 +12,8 @@ var remoteVideo = document.querySelector('#remoteVideo');
 var miniVideo = document.querySelector('#miniVideo');
 var videoDiv = document.querySelector('#videos');
 var initImageDiv = document.querySelector('#initImage');
-var mapContainer = document.querySelector('#map-container');
+
+
 
 var pcConfig = {
     'iceServers': [
@@ -40,14 +41,10 @@ var sdpConstraints = {
 var room = 'foo';
 // Could prompt for room name:
 videoDiv.style.visibility="hidden";
-mapContainer.style.visibility = "hidden";
 document.getElementsByClassName("callEnter")[0].addEventListener('click', start);
 
 function start() {
-    loadOnlineUsers();
-}
-
-function startVideoChat(room) {
+    room = prompt('请输入房间号:');
     if (room !== '') {
         socket.emit('create or join', room);
         console.log('Attempted to create or  join room', room);
