@@ -47,6 +47,7 @@ function start() {
     loadOnlineUsers();
 }
 
+
 function startVideoChat(room) {
     if (room !== '') {
         socket.emit('create or join', room);
@@ -69,6 +70,28 @@ function startVideoChat(room) {
 
 
 var socket = io.connect();
+
+function registerUserSocket(uuid) {
+    socket.emit('registerUserSocket', uuid);
+}
+
+function inviteFriend(inviteInfo) {
+    socket.emit('inviteFriend', inviteInfo);
+}
+
+
+socket.on('confirmInvite', function (uuid) {
+    alert("confirm Invite");
+    var confirmInvite = confirm("accept invite:" + uuid);
+    if (confirmInvite == true) {
+        //socket.emit('confirmInviteOk', inviteInfo);
+        console.log("confirmInviteOk")
+    } else {
+        // socket.emit('confirmInviteReject', inviteInfo);
+        console.log("confirmInviteReject")
+    }
+    // handle join the room logic
+});
 
 socket.on('created', function(room) {
     console.log('Created room ' + room);

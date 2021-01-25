@@ -17,7 +17,8 @@ userDB = {
             "lng": 113.95028,
             "lat": 22.5059
         }
-    ]
+    ],
+    userSocketList: new Map()
 }
 
 module.exports = userDB;

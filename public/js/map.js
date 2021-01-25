@@ -29,7 +29,9 @@ AMap.plugin('AMap.Geolocation', function() {
         // data是具体的定位信息
         currentLocation = data;
         console.log(data);
-        registUserinfo(getLocalUserInfo(data));
+        var localUserInfo = getLocalUserInfo(data);
+        registUserinfo(localUserInfo);
+        registerUserSocket(localUserInfo.uuid);
     }
 
     function onError (data) {
@@ -75,7 +77,14 @@ function showUsersInMap(userListStr) {
         if (userList[i].uuid != currentUuid) {
             marker.on('click', function () {
                 var room = generateRoom(currentUuid, userList[i].uuid);
-                alert("roomNum:" + room);
+                var inviteInfo = {
+                    currentUuid: currentUuid,
+                    friendUuid: userList[i].uuid
+                }
+                console.log(userList[i].uuid);
+                inviteFriend(inviteInfo);
+
+                //alert("roomNum:" + room);
             });
         }
     }

@@ -10,6 +10,21 @@ const bindSocketIoEvent = (io) => {
             socket.emit('log', array);
         }
 
+        socket.on('registerUserSocket', function(uuid) {
+            userDB.userSocketList.set(uuid, socket.id);
+            console.log(userDB.userSocketList);
+            log('Client said: registerUserSocket:', uuid);
+        });
+
+        socket.on('inviteFriend', function(inviteInfo) {
+            console.log(inviteInfo);
+            var friendSocketId = userDB.userSocketList.get(inviteInfo.friendUuid);
+            var mySocketId = userDB.userSocketList.get(inviteInfo.currentUuid);
+            socket.to(friendSocketId).emit('confirmInvite', inviteInfo.currentUuid);
+            // io.sockets.connected[mySocketId].emit('friendNotOnline', inviteInfo.friendUuid);
+            // userDB.userSocketList.set(uuid, socket.id);
+        });
+
         socket.on('message', function(message) {
             log('Client said: ', message);
             // for a real app, would be room-only (not broadcast)
