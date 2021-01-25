@@ -81,17 +81,29 @@ function inviteFriend(inviteInfo) {
 
 
 socket.on('confirmInvite', function (uuid) {
-    alert("confirm Invite");
     var confirmInvite = confirm("accept invite:" + uuid);
     if (confirmInvite == true) {
         //socket.emit('confirmInviteOk', inviteInfo);
-        console.log("confirmInviteOk")
+        startVideoChat(generateRoom(getAndSaveUuid(), uuid));
     } else {
-        // socket.emit('confirmInviteReject', inviteInfo);
-        console.log("confirmInviteReject")
+        var inviteInfo = {
+            currentUuid: getAndSaveUuid(),
+            friendUuid: uuid
+        }
+        socket.emit('confirmInviteReject', inviteInfo);
     }
-    // handle join the room logic
 });
+
+
+socket.on('receiveReject', function () {
+    loadOnlineUsers();
+    localVideo.classList.remove("active");
+    localVideo.srcObject = null;
+    videoDiv.style.visibility="hidden";
+    mapContainer.style.visibility = "visible";
+    mapContainer.style.height = "100%";
+});
+
 
 socket.on('created', function(room) {
     console.log('Created room ' + room);
@@ -157,7 +169,9 @@ function gotStream(stream) {
     if (isInitiator) {
         maybeStart();
     }
-    initImageDiv.style.visibility="hidden";
+    initImageDiv.style.visibility = "hidden";
+    mapContainer.style.visibility = "hidden";
+    mapContainer.style.height = 0;
     videoDiv.style.visibility="visible";
     localVideo.classList.add("active");
 }

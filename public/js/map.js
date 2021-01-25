@@ -76,15 +76,15 @@ function showUsersInMap(userListStr) {
         });
         if (userList[i].uuid != currentUuid) {
             marker.on('click', function () {
-                var room = generateRoom(currentUuid, userList[i].uuid);
+                var roomNum = generateRoom(currentUuid, userList[i].uuid);
                 var inviteInfo = {
                     currentUuid: currentUuid,
                     friendUuid: userList[i].uuid
                 }
                 console.log(userList[i].uuid);
                 inviteFriend(inviteInfo);
-
-                //alert("roomNum:" + room);
+                startVideoChat(roomNum);
+                map && map.destroy();
             });
         }
     }

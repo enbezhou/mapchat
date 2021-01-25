@@ -25,6 +25,12 @@ const bindSocketIoEvent = (io) => {
             // userDB.userSocketList.set(uuid, socket.id);
         });
 
+        socket.on('confirmInviteReject', function(inviteInfo) {
+            var friendSocketId = userDB.userSocketList.get(inviteInfo.friendUuid);
+
+            socket.to(friendSocketId).emit('receiveReject');
+        });
+
         socket.on('message', function(message) {
             log('Client said: ', message);
             // for a real app, would be room-only (not broadcast)
