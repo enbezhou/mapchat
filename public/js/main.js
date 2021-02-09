@@ -44,9 +44,12 @@ mapContainer.style.visibility = "hidden";
 document.getElementsByClassName("callEnter")[0].addEventListener('click', start);
 
 function start() {
-    loadOnlineUsers();
+    if (!!window.navigator.mediaDevices){
+        loadOnlineUsers();
+    } else {
+        alert("当前浏览器不支持视频聊天功能，请换用Chrome浏览器接着使用");
+    }
 }
-
 
 function startVideoChat(room) {
     if (room !== '') {
@@ -328,3 +331,11 @@ function stop() {
     pc.close();
     pc = null;
 }
+setTimeout(checkBrowser, 1000);
+
+function checkBrowser() {
+    if (!window.navigator.mediaDevices){
+        alert("当前浏览器不支持视频聊天功能，请换用Chrome|safari浏览器接着使用^_^");
+    }
+}
+
