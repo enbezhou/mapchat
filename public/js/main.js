@@ -66,11 +66,9 @@ function startVideoChat(room) {
                 alert('getUserMedia() error: ' + e.name);
             });
     } catch (e) {
-        alert(`getUserMedia() error: ${e.name}`);
+        alert(`请您打开浏览器的获取摄像头的权限之后，刷新页面`);
     }
 }
-
-
 
 var socket = io.connect();
 
@@ -338,4 +336,3 @@ function checkBrowser() {
         alert("当前浏览器不支持视频聊天功能，请换用Chrome|safari浏览器接着使用^_^");
     }
 }
-
