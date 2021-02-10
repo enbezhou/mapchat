@@ -116,3 +116,44 @@ video {
 .amap-icon img{
     border:1px solid red;
 }
+
+#remote-user-containner {
+    display: block;
+    height: 90%;
+    object-fit: cover;  /* no letterboxing */
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    z-index: 1000;
+    background-color: #404040;
+}
+
+#remote-user-containner {
+    visibility: hidden;
+}
+
+#remote-user-containner p {
+    color: #ffffff;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+#remote-user-containner button {
+    margin: 0 auto;
+    width: 120px;
+    height: 30px;
+    font-size: 18px;
+    margin-left: 10px;
+    background-color: #ffffff;
+}
+
+.remote-user-btn {
+    text-align: center;
+}
+
+#remote-user-map {
+    width: 100%;
+    height: 80%;
+}
+

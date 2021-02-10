@@ -6,7 +6,7 @@
 // 6. video talking.
 
 var currentLocation = null;
-var onlineUsers = null;
+var ONLINE_USER_LIST = null;
 if (!!window.navigator.mediaDevices){
     AMap.plugin('AMap.Geolocation', function() {
         var geolocation = new AMap.Geolocation({
@@ -55,6 +55,7 @@ function loadOnlineUsersSuccess(userInfoList) {
 
 function showUsersInMap(userListStr) {
     var userList = JSON.parse(userListStr);
+    ONLINE_USER_LIST = userList;
     var map = new AMap.Map('map-container', {
         resizeEnable: true,
         center:[userList[0].lng, userList[0].lat],
@@ -155,6 +156,27 @@ function getAndSaveUuid() {
         setCookie("videochat_ticket", generateUuid(), 1);
     }
     return videochat_uuid;
+}
+
+function showRemoteUserPoint(userInfo) {
+    remoteUserContainer.style.visibility = "visible";
+    var iconImg = "/image/title/" + userInfo.userIcon + ".jpg"
+    REMOTE_USER_MAP = new AMap.Map('remote-user-map', {
+        resizeEnable: true,
+        center:[userInfo.lng, userInfo.lat],
+        zoom: 12
+    });
+    var marker = new AMap.Marker({
+        map: REMOTE_USER_MAP,
+        icon: new AMap.Icon({
+            image: iconImg,
+            size: new AMap.Size(50, 50),  //图标所处区域大小
+            imageSize: new AMap.Size(50, 50) //图标大小
+        }),
+        position: [userInfo.lng, userInfo.lat],
+        // position: [116.405467, 39.907761]
+    });
+    //map.setFitView();
 }
 
 function getCookie(cname) {

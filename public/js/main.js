@@ -7,12 +7,17 @@ var localStream;
 var pc;
 var remoteStream;
 var turnReady;
+var CURRENT_REMOTE_USER = null;
+var REMOTE_USER_MAP = null;
 var localVideo = document.querySelector('#localVideo');
 var remoteVideo = document.querySelector('#remoteVideo');
 var miniVideo = document.querySelector('#miniVideo');
 var videoDiv = document.querySelector('#videos');
 var initImageDiv = document.querySelector('#initImage');
 var mapContainer = document.querySelector('#map-container');
+var remoteUserContainer = document.querySelector('#remote-user-containner');
+var remoteUserMapDiv = document.querySelector('#remote-user-map');
+
 
 var pcConfig = {
     'iceServers': [
@@ -42,6 +47,8 @@ var room = 'foo';
 videoDiv.style.visibility="hidden";
 mapContainer.style.visibility = "hidden";
 document.getElementsByClassName("callEnter")[0].addEventListener('click', start);
+document.getElementById("accept-remote-user-btn").addEventListener('click', acceptRemoteUser);
+document.getElementById("reject-remote-user-btn").addEventListener('click', rejectRmoteUser);
 
 function start() {
     if (!!window.navigator.mediaDevices){
@@ -80,12 +87,10 @@ function inviteFriend(inviteInfo) {
     socket.emit('inviteFriend', inviteInfo);
 }
 
-
 socket.on('confirmInvite', function (uuid) {
-    var confirmInvite = confirm("accept invite:" + uuid);
-    if (confirmInvite == true) {
-        //socket.emit('confirmInviteOk', inviteInfo);
-        startVideoChat(generateRoom(getAndSaveUuid(), uuid));
+    if (!CURRENT_REMOTE_USER) {
+        CURRENT_REMOTE_USER = uuid;
+        showRemoteUserPoint(getRemoteUserInfo(uuid));
     } else {
         var inviteInfo = {
             currentUuid: getAndSaveUuid(),
@@ -93,8 +98,41 @@ socket.on('confirmInvite', function (uuid) {
         }
         socket.emit('confirmInviteReject', inviteInfo);
     }
+
+    // var confirmInvite = confirm("accept invite:" + uuid);
+    // // TODO
+    // if (confirmInvite == true) {
+    //     //socket.emit('confirmInviteOk', inviteInfo);
+    //     startVideoChat(generateRoom(getAndSaveUuid(), uuid));
+    // } else {
+    //     var inviteInfo = {
+    //         currentUuid: getAndSaveUuid(),
+    //         friendUuid: uuid
+    //     }
+    //     socket.emit('confirmInviteReject', inviteInfo);
+    // }
 });
 
+function acceptRemoteUser() {
+    startVideoChat(generateRoom(getAndSaveUuid(), CURRENT_REMOTE_USER));
+    hiddenRemoteUserMap();
+}
+
+function rejectRmoteUser() {
+    var inviteInfo = {
+        currentUuid: getAndSaveUuid(),
+        friendUuid: CURRENT_REMOTE_USER
+    }
+    socket.emit('confirmInviteReject', inviteInfo);
+    hiddenRemoteUserMap();
+}
+
+function hiddenRemoteUserMap() {
+    REMOTE_USER_MAP && REMOTE_USER_MAP.destroy();
+    REMOTE_USER_MAP = null;
+    remoteUserContainer.style.visibility = "hidden";
+    CURRENT_REMOTE_USER = null;
+}
 
 socket.on('receiveReject', function () {
     loadOnlineUsers();
@@ -334,5 +372,15 @@ setTimeout(checkBrowser, 1000);
 function checkBrowser() {
     if (!window.navigator.mediaDevices){
         alert("当前浏览器不支持视频聊天功能，请换用Chrome|safari浏览器接着使用^_^");
+    }
+}
+
+function getRemoteUserInfo(uuid) {
+    if (!!ONLINE_USER_LIST) {
+        for(var i=0; i<ONLINE_USER_LIST.length; i++){
+            if (ONLINE_USER_LIST[i].uuid == uuid) {
+                return ONLINE_USER_LIST[i];
+            }
+        }
     }
 }
