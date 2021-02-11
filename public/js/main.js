@@ -17,6 +17,9 @@ var initImageDiv = document.querySelector('#initImage');
 var mapContainer = document.querySelector('#map-container');
 var remoteUserContainer = document.querySelector('#remote-user-containner');
 var remoteUserMapDiv = document.querySelector('#remote-user-map');
+var closeVideoChatContainner = document.querySelector('#close-video-chat-container');
+var closeVideoChatBtn = document.querySelector('#close-video-chat-btn');
+
 
 
 var pcConfig = {
@@ -49,7 +52,11 @@ mapContainer.style.visibility = "hidden";
 document.getElementsByClassName("callEnter")[0].addEventListener('click', start);
 document.getElementById("accept-remote-user-btn").addEventListener('click', acceptRemoteUser);
 document.getElementById("reject-remote-user-btn").addEventListener('click', rejectRmoteUser);
+closeVideoChatBtn.addEventListener('click', reloadPage);
 
+function reloadPage() {
+    location.reload();
+}
 function start() {
     if (!!window.navigator.mediaDevices){
         loadOnlineUsers();
@@ -217,6 +224,7 @@ function gotStream(stream) {
     mapContainer.style.height = 0;
     videoDiv.style.visibility="visible";
     localVideo.classList.add("active");
+
 }
 
 var constraints = {
@@ -348,6 +356,7 @@ function handleRemoteStreamAdded(event) {
     localVideo.classList.remove("active");
     localVideo.srcObject = null;
     videoDiv.classList.add("active");
+    closeVideoChatContainner.style.visibility="visible";
 }
 
 function handleRemoteStreamRemoved(event) {
