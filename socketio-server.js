@@ -1,6 +1,32 @@
 var userDB = require('./userDB');
+var schedule = require('node-schedule');
+var activeUserList = new Map();
+
 
 const bindSocketIoEvent = (io) => {
+    schedule.scheduleJob('0 * * * * *', function(){
+        var curCheckList = userDB.userSocketList;
+        userDB.userSocketList.forEach(function(value, key){
+            io.to(value).emit('client-health-check', key);
+        });
+        setTimeout(function () {
+            if (!!curCheckList) {
+                var removeUuidList = [];
+                curCheckList.forEach(function (value, key) {
+                    if (!activeUserList.get(key)) {
+                        removeUuidList.push(key);
+                        userDB.userSocketList.delete(key);
+                    }
+                })
+                userDB.userList = userDB.userList.filter(function (userinfo) {
+                    return !removeUuidList.includes(userinfo.uuid);
+                })
+                activeUserList = new Map();
+                curCheckList = new Map();
+            }
+        }, 2000);
+    });
+
     io.on('connection', function(socket) {
         console.log("test connect");
         // convenience function to log server messages on the client
@@ -29,6 +55,10 @@ const bindSocketIoEvent = (io) => {
             var friendSocketId = userDB.userSocketList.get(inviteInfo.friendUuid);
 
             socket.to(friendSocketId).emit('receiveReject');
+        });
+
+        socket.on('confirm-health-check', function(uuid) {
+            activeUserList.set(uuid, socket.id);
         });
 
         socket.on('message', function(message) {
