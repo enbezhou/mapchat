@@ -99,6 +99,14 @@ function showUsersInMap(userListStr) {
             liteStyle: true
         }));
     });
+
+    if (!!userList && userList.length == 1) {
+        setTimeout(showOneUserAlert, 1000);
+    }
+}
+
+function showOneUserAlert(){
+    alert("当前只有一个用户，如果有其他用户，您可以刷新页面展示更多朋友");
 }
 
 function generateRoom(currentUuid, secondUuid) {
