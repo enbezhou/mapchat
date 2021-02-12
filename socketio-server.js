@@ -33,7 +33,7 @@ const bindSocketIoEvent = (io) => {
         function log() {
             var array = ['Message from server:'];
             array.push.apply(array, arguments);
-            socket.emit('log', array);
+            // socket.emit('log', array);
         }
 
         socket.on('registerUserSocket', function(uuid) {
@@ -51,15 +51,35 @@ const bindSocketIoEvent = (io) => {
             // userDB.userSocketList.set(uuid, socket.id);
         });
 
-        socket.on('confirmInviteReject', function(inviteInfo) {
+        socket.on('confirmInviteReject', function(inviteInfo, roomId) {
             var friendSocketId = userDB.userSocketList.get(inviteInfo.friendUuid);
 
-            socket.to(friendSocketId).emit('receiveReject');
+            socket.to(friendSocketId).emit('receiveReject', roomId);
+        });
+
+        socket.on('leave-room', function(roomId) {
+            console.log(io.sockets.adapter.rooms);
+            if (!!io.sockets.adapter.rooms.get(roomId)) {
+                io.sockets.adapter.rooms.get(roomId).clear();
+            }
         });
 
         socket.on('confirm-health-check', function(uuid) {
             activeUserList.set(uuid, socket.id);
         });
+
+        socket.on('apply-destroy-room', function(uuid, roomId) {
+            console.log(io.sockets.adapter.rooms.get('6accd0d76f-5765152f56'));
+            if(!!uuid && !!userDB.userSocketList.get(uuid)) {
+                io.to(userDB.userSocketList.get(uuid)).emit("destroy-second-chat", uuid, roomId);
+                io.sockets.adapter.rooms.get(roomId).clear();
+
+            }
+        });
+
+        // socket.on('leave-room', function(roomId) {
+        //     socket.leave(roomId);
+        // });
 
         socket.on('message', function(message) {
             log('Client said: ', message);

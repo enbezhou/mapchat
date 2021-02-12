@@ -18,9 +18,8 @@ var mapContainer = document.querySelector('#map-container');
 var remoteUserContainer = document.querySelector('#remote-user-containner');
 var remoteUserMapDiv = document.querySelector('#remote-user-map');
 var closeVideoChatContainner = document.querySelector('#close-video-chat-container');
-var closeVideoChatBtn = document.querySelector('#close-video-chat-btn');
-
-
+var closeLocalVideoChatBtn = document.querySelector('#close-local-video-chat-btn');
+var closeOnlineVideoChatBtn = document.querySelector('#close-online-video-chat-btn');
 
 var pcConfig = {
     'iceServers': [
@@ -52,11 +51,22 @@ mapContainer.style.visibility = "hidden";
 document.getElementsByClassName("callEnter")[0].addEventListener('click', start);
 document.getElementById("accept-remote-user-btn").addEventListener('click', acceptRemoteUser);
 document.getElementById("reject-remote-user-btn").addEventListener('click', rejectRmoteUser);
-closeVideoChatBtn.addEventListener('click', reloadPage);
+closeLocalVideoChatBtn.addEventListener('click', closeLocalVideoChat);
+closeOnlineVideoChatBtn.addEventListener('click', closeOnlineVideoChat);
 
-function reloadPage() {
-    location.reload();
+function closeOnlineVideoChat() {
+    var roomId = generateRoom(getAndSaveUuid(), CURRENT_REMOTE_USER);
+    destroyLocalVideoScreen();
+    if (CURRENT_REMOTE_USER != null) {
+        var roomId = generateRoom(getAndSaveUuid(), CURRENT_REMOTE_USER);
+        socket.emit('apply-destroy-room', CURRENT_REMOTE_USER, roomId);
+    }
+    CURRENT_REMOTE_USER = null;
+    isChannelReady = false;
+    isInitiator = false;
+    isStarted = false;
 }
+
 function start() {
     if (!!window.navigator.mediaDevices){
         loadOnlineUsers();
@@ -91,6 +101,7 @@ function registerUserSocket(uuid) {
 }
 
 function inviteFriend(inviteInfo) {
+    CURRENT_REMOTE_USER = inviteInfo.friendUuid;
     socket.emit('inviteFriend', inviteInfo);
 }
 
@@ -130,26 +141,100 @@ function rejectRmoteUser() {
         currentUuid: getAndSaveUuid(),
         friendUuid: CURRENT_REMOTE_USER
     }
-    socket.emit('confirmInviteReject', inviteInfo);
+    var roomId = generateRoom(inviteInfo.currentUuid, inviteInfo.friendUuid);
+    socket.emit('confirmInviteReject', inviteInfo, roomId);
     hiddenRemoteUserMap();
+    CURRENT_REMOTE_USER = null;
 }
 
 function hiddenRemoteUserMap() {
     REMOTE_USER_MAP && REMOTE_USER_MAP.destroy();
     REMOTE_USER_MAP = null;
     remoteUserContainer.style.visibility = "hidden";
-    CURRENT_REMOTE_USER = null;
 }
 
-socket.on('receiveReject', function () {
+socket.on('receiveReject', function (roomId) {
+    socket.emit('leave-room', roomId);
+    isChannelReady = false;
+    isInitiator = false;
+    isStarted = false;
     loadOnlineUsers();
     localVideo.classList.remove("active");
+    if (!!localVideo.srcObject) {
+        localVideo.srcObject.getTracks()[0].stop();
+        localVideo.srcObject.getTracks()[1].stop();
+    }
     localVideo.srcObject = null;
     videoDiv.style.visibility="hidden";
     mapContainer.style.visibility = "visible";
     mapContainer.style.height = "100%";
+    closeOnlineVideoChatBtn.style.display="none";
+    closeLocalVideoChatBtn.style.display="none";
+    closeVideoChatContainner.style.visibility="hidden";
+
+
 });
 
+socket.on('destroy-second-chat', function (uuid, roomId) {
+    if (!!uuid && uuid ==getAndSaveUuid() && CURRENT_REMOTE_USER != null) {
+        destroyLocalVideoScreen();
+        isChannelReady = false;
+        isInitiator = false;
+        isStarted = false;
+        // if (!!roomId) {
+        //     socket.emit('leave-room', roomId);
+        // }
+    }
+    CURRENT_REMOTE_USER = null;
+});
+
+function destroyLocalVideoScreen() {
+    loadOnlineUsers();
+    if (!!remoteVideo.srcObject) {
+        remoteVideo.srcObject.getTracks()[0].stop();
+        remoteVideo.srcObject.getTracks()[1].stop();
+    }
+    if (!!miniVideo.srcObject) {
+        miniVideo.srcObject.getTracks()[0].stop();
+        miniVideo.srcObject.getTracks()[1].stop();
+    }
+    remoteVideo.srcObject = null;
+    miniVideo.srcObject = null;
+    remoteVideo.classList.remove("active");
+    miniVideo.classList.remove("active");
+    videoDiv.classList.remove("active");
+    closeOnlineVideoChatBtn.style.display="none";
+    closeLocalVideoChatBtn.style.display="none";
+    closeVideoChatContainner.style.visibility="hidden";
+    videoDiv.style.visibility="hidden";
+    mapContainer.style.visibility = "visible";
+    mapContainer.style.height = "100%";
+}
+
+
+function closeLocalVideoChat() {
+    loadOnlineUsers();
+    localVideo.classList.remove("active");
+    if (!!localVideo.srcObject) {
+        localVideo.srcObject.getTracks()[0].stop();
+        localVideo.srcObject.getTracks()[1].stop();
+    }
+    localVideo.srcObject = null;
+    videoDiv.style.visibility="hidden";
+    mapContainer.style.visibility = "visible";
+    mapContainer.style.height = "100%";
+    hiddenVideoBtn();
+    var roomId = generateRoom(CURRENT_REMOTE_USER, getAndSaveUuid());
+    socket.emit('leave-room', roomId)
+    CURRENT_REMOTE_USER = null;
+
+}
+
+function hiddenVideoBtn() {
+    closeLocalVideoChatBtn.style.display = 'none';
+    closeOnlineVideoChatBtn.style.display = 'none';
+    closeVideoChatContainner.style.visibility="hidden";
+}
 
 socket.on('created', function(room) {
     console.log('Created room ' + room);
@@ -224,7 +309,10 @@ function gotStream(stream) {
     mapContainer.style.height = 0;
     videoDiv.style.visibility="visible";
     localVideo.classList.add("active");
-
+    // closeOnlineVideoChatBtn.style.visibility = "hidden";
+    closeOnlineVideoChatBtn.style.display = 'none';
+    closeLocalVideoChatBtn.style.display = 'inline';
+    closeVideoChatContainner.style.visibility="visible";
 }
 
 var constraints = {
@@ -356,6 +444,8 @@ function handleRemoteStreamAdded(event) {
     localVideo.classList.remove("active");
     localVideo.srcObject = null;
     videoDiv.classList.add("active");
+    closeOnlineVideoChatBtn.style.display="inline";
+    closeLocalVideoChatBtn.style.display="none";
     closeVideoChatContainner.style.visibility="visible";
 }
 
